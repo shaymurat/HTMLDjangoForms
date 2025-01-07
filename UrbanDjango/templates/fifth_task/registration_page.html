@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Имитация регистрации</title>
+  <style>.col_input{background-color:#e8f0fe}</style>
+</head>
+<body>
+<header>
+  <h1>Имитация регистрации</h1>
+  <h3>(через
+  {% if request.resolver_match.route == '' %}
+    HTML{% else %}Django{% endif %} форму)</h3>
+  {% if error %}<h2 style="color: red">{{ error }}</h2>{% endif %}
+</header>
+<main>
+  <form method="post">
+    {% csrf_token %}
+    {% if request.resolver_match.route == '' %}
+      <p>
+      <label for="id_username">Введите логин:</label>
+      <input type="text" id="id_username" name="username" maxlength="30"
+        {% if username %}value="{{ username }}"{% endif %}
+        {% if error == 'Пользователь уже существует' %}
+        autofocus class="col_input"
+        {% endif %}
+        required>
+      </p>
+      <p>
+      <label for="id_password">Введите пароль:</label>
+      <input type="password" id="id_password" name="password" minlength="8"
+        {% if error == 'Пароли не совпадают' %}
+        autofocus class="col_input"
+        {% endif %}
+        required>
+      </p>
+      <p>
+      <label for="id_repeat_password">Повторите пароль:</label>
+      <input type="password" id="id_repeat_password" name="repeat_password"
+        {% if error == 'Пароли не совпадают' %}class="col_input"{% endif %}
+        minlength="8" required>
+      </p>
+      <p>
+      <label for="id_age">Введите свой возраст:</label>
+      <input type="number" id="id_age" name="age" min="1" max="200"
+        {% if age %}value="{{ age }}"{% endif %}
+        {% if error == 'Вы должны быть старше 18' %}
+        autofocus class="col_input"
+        {% endif %}
+        required>
+      </p>
+    {% else %}
+      {{ form.as_p }}
+    {% endif %}
+    <p><button type="submit">Зарегистрироваться</button></p>
+  </form>
+</main>
+</body>
+</html>
